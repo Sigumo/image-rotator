@@ -11,11 +11,14 @@ parser.add_argument('-c', '--clean', action="store_true")
 parser.add_argument('-i', '--input')
 parser.add_argument('-o', '--output')
 parser.add_argument('-s', "--step")
+parser.add_argument('--crop-size')
+parser.add_argument('--without-mirror', action="store_true")
 
 args = parser.parse_args()
 
 origin_dir = args.input or "./images/"
 result_dir = args.output or "./result_images/"
+crop_size = int(args.crop_size) or 640
 
 if args.clean:
     if path.exists(result_dir):
@@ -35,7 +38,10 @@ for image_name in img_names:
     image = Image.open(image_path)
     for angle in rotation_angles:
         result_path = path.join(result_dir, f"{angle}_{image_name}")
-        mirrored_result_path = path.join(result_dir, f"mirrored_{angle}_{image_name}")
-        image.rotate(angle).save(result_path)
-        ImageOps.mirror(image).rotate(angle).save(mirrored_result_path)
+        rotated_image = image.rotate(angle)
+        ImageOps.fit(rotated_image, (crop_size, crop_size)).save(result_path)
+        if not args.without_mirror:
+            mirrored_result_path = path.join(result_dir, f"mirrored_{angle}_{image_name}")
+            rotated_mirrored_image = ImageOps.mirror(image).rotate(angle)
+            ImageOps.fit(rotated_mirrored_image, (crop_size, crop_size)).save(mirrored_result_path)
 #

@@ -15,6 +15,8 @@
 * `-i` `--input` - input directory (defaults to `./images`)
 * `-o` `--output` - results directory (defaults to `./result_images`)
 * `-s` `--step` - rotation step (defaults to `1`)
+* `--crop-size` - size to crop image into rectangle (defaults to `640`)
+* `--without-mirror` - don't add mirrored versions (defaults to `false`)
 
 ## Example
 
