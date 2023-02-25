@@ -20,4 +20,4 @@
 
 ## Example
 
-`python main.py -c -i ./images -o ./result_images -s 90`
+`python main.py -c -i ./images -o ./result_images -s 90 --crop-size 1024`
