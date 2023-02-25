@@ -1,32 +1,41 @@
 #!/usr/bin/env python
 import shutil
+import argparse
 
 from PIL import Image, ImageOps
 import os
-import sys
+from os import path
 
-args = sys.argv[1:]
-origin_dir = "./images/"
-result_dir = "./result_images/"
+parser = argparse.ArgumentParser("Image Rotator")
+parser.add_argument('-c', '--clean', action="store_true")
+parser.add_argument('-i', '--input')
+parser.add_argument('-o', '--output')
+parser.add_argument('-s', "--step")
 
-if "-c" in args or "--clean" in args:
-    if os.path.exists(result_dir):
+args = parser.parse_args()
+
+origin_dir = args.input or "./images/"
+result_dir = args.output or "./result_images/"
+
+if args.clean:
+    if path.exists(result_dir):
         shutil.rmtree(result_dir)
 
-rotation_angles = [0, 90, 180, 270]
+step = int(args.step) or 1
+
+rotation_angles = range(0, 359, step)
 
 img_names = os.listdir(origin_dir)
 
-if not os.path.exists(result_dir):
+if not path.exists(result_dir):
     os.makedirs(result_dir)
 
 for image_name in img_names:
-    image = Image.open(origin_dir + image_name)
-    for angle in [0, 180]:
-        image.rotate(angle).save(result_dir + f"{angle}_{image_name}")
-        ImageOps.mirror(image).rotate(angle).save(result_dir + f"mirrored_{angle}_{image_name}")
-    image.transpose(Image.Transpose.ROTATE_90).save(result_dir + f"90_{image_name}")
-    ImageOps.mirror(image).transpose(Image.Transpose.ROTATE_90).save(result_dir + f"mirrored_90_{image_name}")
-    image.transpose(Image.Transpose.ROTATE_270).save(result_dir + f"270_{image_name}")
-    ImageOps.mirror(image).transpose(Image.Transpose.ROTATE_270).save(result_dir + f"mirrored_270_{image_name}")
-
+    image_path = path.join(origin_dir, image_name)
+    image = Image.open(image_path)
+    for angle in rotation_angles:
+        result_path = path.join(result_dir, f"{angle}_{image_name}")
+        mirrored_result_path = path.join(result_dir, f"mirrored_{angle}_{image_name}")
+        image.rotate(angle).save(result_path)
+        ImageOps.mirror(image).rotate(angle).save(mirrored_result_path)
+#

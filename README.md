@@ -8,4 +8,14 @@
 * Place images in `./images` directory
 * Run `./main.py` in terminal
   * You may need to allow execution with `chmod +x ./main.py`
-  * If you need to clean result directory before new run use `-c` or `--clean` flag
+
+## Supported options
+
+* `-c` `--clean` - clean result directory beforehand (defaults to `false`)
+* `-i` `--input` - input directory (defaults to `./images`)
+* `-o` `--output` - results directory (defaults to `./result_images`)
+* `-s` `--step` - rotation step (defaults to `1`)
+
+## Example
+
+`python main.py -c -i ./images -o ./result_images -s 90`
